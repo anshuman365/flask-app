@@ -80,7 +80,7 @@ nbclient==0.10.2
 nest-asyncio==1.6.0
 nltk==3.9.1
 notebook_shim==0.2.4
-numpy @ file:///home/builder/.termux-build/python-numpy/src/dist/numpy-2.2.2-cp312-cp312-linux_aarch64.whl#sha256=0fddba5bf7a876737b9be0980b3a0d63a80b4b231e70bae5ee42b6250e063061
+numpy==2.2.2
 openai==1.61.0
 overrides==7.7.0
 packaging==24.2
