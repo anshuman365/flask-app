@@ -12,7 +12,12 @@ import sqlite3
 from datetime import timedelta
 from authlib.integrations.flask_client import OAuth
 import random
-
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('vader_lexicon')
 
 # Initialize Flask app
 app = Flask(__name__)
