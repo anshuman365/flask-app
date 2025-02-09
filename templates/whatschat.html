@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What'sChat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+        }
+        #chat-box {
+            width: 100%;
+            height: 300px;
+            border: 1px solid black;
+            background: white;
+            overflow-y: auto;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 70%;
+            margin: 5px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: blue;
+            color: white;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .friend-message {
+            background-color: green;
+            color: white;
+            align-self: flex-start;
+            text-align: left;
+        }
+        .notification {
+            background-color: gray;
+            color: white;
+            text-align: center;
+            align-self: center;
+            font-size: 12px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        input, button {
+            width: 75%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+        button {
+            width: 20%;
+            background-color: blue;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to What'sChat</h1>
+        <h2>Select or Create a Room:</h2>
+        <input type="text" id="room-name" placeholder="Enter Room Name">
+        <button onclick="joinRoom()">Join Room</button>
+
+        <div id="chat-interface" style="display: none;">
+            <h2>Room: <span id="room-title"></span></h2>
+            <div id="chat-box"></div>
+            <input type="text" id="chat-message" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let currentRoom = '';
+        let username = '';
+
+        // Join a chat room
+        function joinRoom() {
+            const roomName = document.getElementById('room-name').value;
+            username = prompt("Enter your username:");
+            if (!roomName || !username) {
+                alert("Room name and username are required!");
+                return;
+            }
+            currentRoom = roomName;
+            socket.emit('join_room', { room: roomName, username });
+            document.getElementById('room-title').textContent = roomName;
+            document.getElementById('chat-interface').style.display = 'block';
+        }
+
+        // Listen for new user join
+        socket.on('user_joined', (data) => {
+            if (data.room === currentRoom) {
+                appendMessage(`${data.users[data.users.length - 1]} joined the room.`, "notification");
+            }
+        });
+
+        // Send message to the server
+        function sendMessage() {
+            const message = document.getElementById('chat-message').value;
+            if (!message) return;
+
+            //appendMessage(`You: ${message}`, "user-message"); // Your messages on right
+            socket.emit('send_message', { room: currentRoom, message, username });
+
+            document.getElementById('chat-message').value = ''; // Clear input box
+        }
+
+        // Receive new messages from the server
+        socket.on('new_message', (data) => {
+            if (data.username === username) {
+                appendMessage(`You: ${data.message}`, "user-message"); // Your messages on right
+            } else {
+                appendMessage(`${data.username}: ${data.message}`, "friend-message"); // Friend's messages on left
+            }
+        });
+
+        // Append messages to chatbox
+        function appendMessage(message, className) {
+            const chatBox = document.getElementById('chat-box');
+            const p = document.createElement('p');
+            p.textContent = message;
+            p.className = `message ${className}`;
+            chatBox.appendChild(p);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+        }
+
+        // Allow "Enter" key to send message
+        function handleKeyPress(event) {
+            if (event.key === "Enter") sendMessage();
+        }
+    </script>
+
+</body>
+</html>

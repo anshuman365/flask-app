@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+	<div class="container">
+    <h1>File Categories</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" class="upload-button">
+        <button type="submit" class="submit-button">Upload</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Video Files</th>
+                <th>Music Files</th>
+                <th>Image Files</th>
+                <th>PDF Files</th>
+                <th>Text Files</th>
+                <th>Python Files</th>
+                <th>HTML Files</th>
+                <th>PPT Files</th>
+                <th>DOC Files</th>
+                <th>Other Files</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {% for file in categorized_files['video'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['music'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['image'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['pdf'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['text'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['python'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['html'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['ppt'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['doc'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for file in categorized_files['other'] %}
+                    <span>{{ file[:10] }}...</span>
+                    <button class="open-button"><a href="{{ url_for('open_file', filename=file) }}">Open</a></button>
+                    <br>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        </div>
+</body>
+</html>
+
