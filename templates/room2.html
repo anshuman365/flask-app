@@ -76,7 +76,7 @@
         const role = "{{ role }}";
 
         // Join the room
-        socket.emit('join_room', { username, room: roomName, role });
+        socket.emit('join_music_room', { username, room: roomName, role });
 
         // DOM Elements
         const audioPlayer = document.getElementById('audioPlayer');
