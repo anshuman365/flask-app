@@ -16,11 +16,11 @@ import nltk
 from werkzeug.utils import secure_filename
 
 
-#nltk.download('punkt')
-#nltk.download('averaged_perceptron_tagger')
-#nltk.download('wordnet')
-#nltk.download('stopwords')
-#nltk.download('vader_lexicon')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('vader_lexicon')
 
 # Initialize Flask app
 app = Flask(__name__)
