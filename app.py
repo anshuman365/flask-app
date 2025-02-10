@@ -13,11 +13,14 @@ from datetime import timedelta
 from authlib.integrations.flask_client import OAuth
 import random
 import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-nltk.download('stopwords')
-nltk.download('vader_lexicon')
+from werkzeug.utils import secure_filename
+
+
+#nltk.download('punkt')
+#nltk.download('averaged_perceptron_tagger')
+#nltk.download('wordnet')
+#nltk.download('stopwords')
+#nltk.download('vader_lexicon')
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -28,7 +31,7 @@ socketio = SocketIO(app)
 
 # Folder configurations
 UPLOAD_FOLDER = 'uploads'
-UPLOAD_FOLDER1 = '/storage/emulated/0/ylog/static/music'
+UPLOAD_FOLDER1 = '/storage/emulated/0/flask-app/static/music'
 MUSIC_FOLDER = '/storage/emulated/0/VidMate/download'
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -198,6 +201,8 @@ def open_file(filename):
         
 #-----------------------------------------music zone------------------------------------------#
 
+#-----------------------------------------music zone------------------------------------------#
+
 MUSIC_FOLDER = os.path.join(os.getcwd(), 'static', 'music')
 if not os.path.exists(MUSIC_FOLDER):
     os.makedirs(MUSIC_FOLDER)
@@ -340,6 +345,44 @@ def handle_repeat_music(data):
             pass
     else:
         print("Error: 'action' key is missing")
+
+# Upload functionality
+UPLOAD_FOLDER1 = 'static/music'
+app.config['UPLOAD_FOLDER1'] = UPLOAD_FOLDER1
+ALLOWED_EXTENSIONS1 = {'mp3', 'wav', 'ogg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS1
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return "No file part", 400  # Valid response
+
+    file = request.files['file']
+    if file.filename == '':
+        return "No selected file", 400  # Valid response
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER1'], filename))
+
+        # Instead of redirecting, render the room template manually
+        return render_template(
+            'room2.html',
+            room_name="your_room_name",  # Replace with actual room name
+            username="your_username",  # Replace with actual username
+            role="Player",  # Or "Listener"
+            files=os.listdir(MUSIC_FOLDER),
+        )
+
+    return "Invalid file format", 400
+    
+@app.route('/music/<path:filename>')
+def serve_music(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER1'], filename)
+
+#-----------------------------------------music zone end------------------------------------#
 
 #-----------------------------------------music zone end------------------------------------#
         
