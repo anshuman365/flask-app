@@ -15,6 +15,17 @@ import random
 import nltk
 from werkzeug.utils import secure_filename
 
+import eventlet
+eventlet.monkey_patch()  # ✅ Apply monkey patching before importing anything else
+
+from flask import Flask, render_template
+from flask_socketio import SocketIO
+import nltk  # Now it's safe to import other modules
+
+
+
+
+
 
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
@@ -22,12 +33,13 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('vader_lexicon')
 
-# Initialize Flask app
-app = Flask(__name__)
-app.secret_key = 'your_unique_secret_key'  # Replace with a secure key
 
-# Initialize SocketIO
-socketio = SocketIO(app)
+# Initialize Flask App
+app = Flask(__name__)
+
+socketio = SocketIO(app, async_mode='eventlet')  # ✅ Ensure eventlet is used
+
+app.secret_key = 'your_unique_secret_key'  # Replace with a secure key
 
 # Folder configurations
 UPLOAD_FOLDER = 'uploads'
