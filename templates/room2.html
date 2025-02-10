@@ -29,9 +29,29 @@
             <label for="seekbar">Seekbar:</label>
             <input type="range" id="seekbar" value="0" step="1" min="0">
         </div>
-
+<br><br><br><br><br><br>
+	<h3>Upload Music</h3>
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".mp3, .wav, .ogg" required>
+    <button type="submit">Upload</button>
+</form>
+<br><br><br><br><br><br>
         <!-- Listener Management Dashboard -->
         <div id="listenerDashboard" style="display: {{ 'block' if role == 'Player' else 'none' }}">
+        	        <!-- Playback Controls (Universal) -->
+        <div class="controls">
+            <button id="playPause" class="button">Play</button>
+            <button id="next" class="button">Next</button>
+            <button id="prev" class="button">Previous</button>
+            <br><br>
+            <button id="shuffle" class="button">Shuffle</button>
+            <button id="repeat" class="button">Repeat</button>
+        </div>
+
+        <audio id="audioPlayer" controls style="display: none; align:center;">
+            <source id="audioSource" type="audio/mp3">
+        </audio>
+    </div>
             <h3>Connected Listeners</h3>
             <table id="listenerTable">
                 <thead>
@@ -47,20 +67,7 @@
             </table>
         </div>
 
-        <!-- Playback Controls (Universal) -->
-        <div class="controls">
-            <button id="playPause" class="button">Play</button>
-            <button id="next" class="button">Next</button>
-            <button id="prev" class="button">Previous</button>
-            <br><br>
-            <button id="shuffle" class="button">Shuffle</button>
-            <button id="repeat" class="button">Repeat</button>
-        </div>
 
-        <audio id="audioPlayer" controls style="display: none;">
-            <source id="audioSource" type="audio/mp3">
-        </audio>
-    </div>
 
     <script>
         const socket = io.connect();
