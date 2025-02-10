@@ -1,3 +1,8 @@
+import eventlet
+eventlet.monkey_patch()  # Apply monkey patching before importing anything
+
+from flask import Flask
+import socketio
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import wordnet, stopwords
 from nltk import ne_chunk, pos_tag
@@ -15,12 +20,6 @@ import random
 import nltk
 from werkzeug.utils import secure_filename
 
-import eventlet
-eventlet.monkey_patch()  # ✅ Apply monkey patching before importing anything else
-
-from flask import Flask, render_template
-from flask_socketio import SocketIO
-import nltk  # Now it's safe to import other modules
 
 
 
