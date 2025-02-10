@@ -1,13 +1,15 @@
 Authlib==1.4.1
 bcrypt==4.2.1
+Flask
+Flask-SocketIO
 Flask-Admin==1.6.1
 Flask-Cors==5.0.0
 Flask-Login==0.6.3
 Flask-Mail==0.10.0
 Flask-RESTful==0.3.10
-Flask-SocketIO==5.5.1
 Flask-SQLAlchemy==3.1.1
-gunicorn==23.0.0
+gunicorn
+eventlet
 nltk==3.8.1
 numpy==1.24.3
 Flask==2.3.2
