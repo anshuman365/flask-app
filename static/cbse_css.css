@@ -1,0 +1,566 @@
+
+         /* General Reset */
+body, h1, h2, h3, h4, h5, p, ul, li, div {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    align: center; 
+    text-align: center;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    background-color: #bbb;
+    line-height: 1.6;
+
+}
+
+/* Header Section */
+#header {
+    background-color: #004080;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+#header .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ccc;
+    padding: 20px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.navbar .menu-icon {
+    display: block; /* Hidden for larger screens */
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.navbar .logo {
+    width: 120px;
+    height: auto;
+    margin: 10px auto;
+}
+
+.navbar .title h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #004080;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+/* Signup Button */
+.signup-btn {
+    background-color: #004080;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s ease;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.signup-btn:hover {
+    background-color: #002d5a;
+}
+
+/* Links Section */
+/* Navigation bar styles */
+.link1 ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    background-color: #004080;
+}
+
+.link1 ul li {
+    position: relative; /* Necessary for dropdown positioning */
+    display: inline-block;
+}
+
+/* Links styling */
+.link1 ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.link1 ul li a:hover,
+.link1 ul li a.active {
+    background-color: #003366;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    list-style: none;
+    position: absolute;
+    top: 100%; /* Position below the menu button */
+    left: 0;
+    padding: 0;
+    margin: 0;
+    background-color: #003366;
+    border-radius: 4px;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+    width: 150px;
+    opacity: 0; /* Ensure it’s completely invisible */
+    transform: translateY(-10px); /* Slightly move upward to hide */
+    transition: all 0.3s ease; /* Smooth transition for appearance */
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 8px 12px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #002244;
+}
+
+/* Show dropdown on toggle */
+.menu-container.show .dropdown-menu {
+    display: block;
+    opacity: 1; /* Make visible */
+    transform: translateY(0); /* Reset the upward movement */
+}
+
+/* Join Us button styling */
+.join-us-button {
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.join-us-button:hover {
+    background-color: #0056b3;
+}
+
+/* Show dropdown on toggle */
+.menu-container.show .dropdown-menu {
+    display: block;
+}
+
+/* Join Us button styling */
+.join-us-button {
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.join-us-button:hover {
+    background-color: #0056b3;
+}
+
+/* Join Us button styling */
+.join-us-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+}
+
+.join-us-button:hover {
+    background-color: #0056b3;
+}
+
+/* Sliding Menu */
+#menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 998;
+}
+
+#menu-overlay.visible {
+    display: block;
+}
+
+#sliding-menu {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Default hidden state */
+    width: 250px;
+    height: 100%;
+    background: #004080;
+    color: #ffffff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease, left 0.3s ease;
+    z-index: 999;
+}
+
+#sliding-menu.open {
+    right: 0; /* Visible state */
+}
+
+#sliding-menu .close-menu {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #ffffff;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#sliding-menu .menu-options {
+    list-style: none;
+    margin: 0;
+    padding: 50px 20px 0;
+    text-align: center;
+}
+
+#sliding-menu .menu-options li {
+    margin: 10px 0;
+}
+
+#sliding-menu .menu-options button {
+    background: #ffffff;
+    color: #004080;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#sliding-menu .menu-options button:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+/* Responsive Design for Desktop and Mobile */
+@media screen and (min-width: 768px) {
+    /* Sliding Menu Desktop (Left Side) */
+    #sliding-menu {
+        right: auto;
+        left: -250px; /* Hidden on the left */
+    }
+
+    #sliding-menu.open {
+        left: 0; /* Slides in from the left */
+    }
+
+    .navbar .menu-icon {
+        display: ; /* Not visible on desktop */
+    }
+
+    .website-btn {
+    background-color: #004080;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s ease;
+    position: absolute;
+    left: 125px;
+    }
+
+}
+
+
+   /* Button Styles */
+        .btn-grad {
+            margin: 10px;
+            padding: 15px;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            color: white;
+            box-shadow: 0 0 20px #eee;
+            border-radius: 10px;
+            display: inline-block;
+            font-size: 18px;
+            width: 280px;
+            text-align: center;
+        }
+
+        .btn-grad {
+            background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%);
+        }
+
+        .btn-grad:hover {
+            background-position: right center;
+        }
+        footer {
+                background:#D3D3D3;
+                color: Gray;
+           font-size:18px;
+           text-align: left;
+        }
+
+       /* General Reset */
+div, i {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Social Media Container */
+.school-social {
+    display: flex; /* Flexbox for horizontal alignment */
+    justify-content: center; /* Center the items horizontally */
+    align-items: center; /* Center the items vertically */
+    gap: 20px; /* Space between each icon */
+    padding: 10px 20px; /* Padding around the container */
+    background-color: #f4f4f4; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Individual Social Media Icon */
+.school-social i {
+        box-sizing: border-box;
+    display: flex; /* For aligning the icon and text together */
+    align-items: center; /* Vertical alignment */
+    font-size: 18px; /* Icon size */
+    color: #004080; /* Default icon color */
+    font-weight: bold; /* Bold text for names */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Hover Effect */
+.school-social i:hover {
+    color: #ff4081; /* Change color on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Additional Icon-Specific Styling */
+.school-social .fa-whatsapp {
+    color: #25D366; /* WhatsApp green */
+}
+
+.school-social .fa-youtube {
+    color: #FF0000; /* YouTube red */
+}
+
+.school-social .fa-facebook {
+    color: #4267B2; /* Facebook blue */
+}
+
+.school-social .fa-instagram {
+    color: #C13584; /* Instagram gradient-like pink */
+}
+
+.school-social .fa-twitter {
+    color: #1DA1F2; /* Twitter blue */
+}
+@media screen and (max-width: 768px) {
+    /* Sliding Menu Mobile (Center) */
+    #sliding-menu {
+        width: 100%;
+        right: -100%; /* Hidden offscreen */
+    }
+
+    #sliding-menu.open {
+        right: 0; /* Slides in from the center */
+    }
+
+    .navbar .menu-icon {
+        display: block; /* Show menu icon for mobile */
+    }
+    .school-social i {
+    display: table ; /* For aligning the icon and text together */
+    align-items: center; /* Vertical alignment */
+    font-size: 24px; /* Icon size */
+    color: #004080; /* Default icon color */
+    font-weight: bold; /* Bold text for names */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+    cursor: pointer; /* Pointer cursor on hover */
+    }
+}
+  .school-social ul{margin:0 auto;
+    list-style-type:none;
+   }
+    .school-social ul li{padding:0px 2px;
+    display:inline-block;
+
+    margin-top:15px;
+   }
+
+    .school-social ul li a{
+     backgroung:grey;
+     width:20px;
+     height:20px;
+     font-size:18px;
+     border-radius:20px;
+   }
+   footer {
+           font-size:18px;
+   }
+
+   /* website Button */
+.website-btn {
+    background-color: #004080;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s ease;
+    position: absolute;
+    right: 120px;
+}
+
+.website-btn:hover {
+    background-color: #002d5a;
+}
+#first-heading{
+        width: 100%;
+    background-color: #bbb; /* Set your desired background color */
+    padding: 20px 10px; /* Add padding if needed */
+}
+
+
+/* Sliding Animation */
+.slip-animation-container {
+    box-sizing: border-box;
+    width: 100%; /* Full width of the screen */
+    overflow: hidden; /* Ensure content stays within the container */
+    position: relative;
+    height: auto;
+    padding: 10px 0;
+}
+
+
+
+.slip-animation {
+    box-sizing: border-box;
+    position: relative;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #004080;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    animation: slideIn 5s linear infinite alternate;
+    width: 100%; /* Ensure it takes up full width */
+    height: auto;
+    overflow: hidden; /* Prevent content from overflowing */
+    text-align: center; /* Center align text */
+}
+
+/* Keyframes for sliding effect */
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(0%); /* Bring it fully visible */
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .slip-animation {
+        font-size: 16px; /* Adjust font size for smaller screens */
+        padding: 5px 10px; /* Reduce padding for better fit */
+    }
+}
+@media screen and (max-width: 768px) {
+        #contacts{
+                font-size: 16px;
+                }
+        }
+#welcome-effect {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+    height: 50px;
+    position: relative;
+    top: 145px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sliding-text {
+    white-space: nowrap;
+    animation: slideText 10s linear infinite;
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+}
+
+#sliding-text a {
+    color: white;
+    text-decoration: none;
+}
+
+#sliding-text a:hover {
+    text-decoration: underline;
+}
+
+/* Keyframes for gradient animation */
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Keyframes for sliding text */
+@keyframes slideText {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+   
