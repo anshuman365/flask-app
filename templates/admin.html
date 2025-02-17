@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .panel {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 45%;
+        }
+        .panel h2 {
+            color: #333;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <p>Welcome to the admin dashboard. Use the sections below to manage users, monitor traffic, and more.</p>
+
+    <div class="container">
+        <!-- User Management Panel -->
+        <div class="panel">
+            <h2>User Management</h2>
+            <p>Here you can see all users and manage their data.</p>
+            <button onclick="window.location.href='/manage-users'">View Users</button>
+        </div>
+
+        <!-- Traffic Overview Panel -->
+        <div class="panel">
+            <h2>Traffic Overview</h2>
+            <p>Monitor the traffic statistics for the website.</p>
+            <button onclick="window.location.href='/traffic-stats'">View Traffic Stats</button>
+        </div>
+
+        <!-- Content Management Panel -->
+        <div class="panel">
+            <h2>Content Management</h2>
+            <p>Control the content displayed on user pages.</p>
+            <button onclick="window.location.href='/manage-content'">Manage Content</button>
+        </div>
+
+        <!-- Site Settings Panel -->
+        <div class="panel">
+            <h2>Site Settings</h2>
+            <p>Configure general site settings and preferences.</p>
+            <button onclick="window.location.href='/site-settings'">Settings</button>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="logout-btn">
+        <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+    </div>
+</body>
+</html>
