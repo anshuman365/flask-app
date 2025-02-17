@@ -103,6 +103,56 @@ def home():
 def home_page():
     return render_template('home.html')
     
+#------------admin system part-----------------#
+
+
+
+
+# Dummy credentials (Replace with a database in production)
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "password"
+
+@app.route("/admin-login", methods=["GET", "POST"])
+def admin_login():
+    """Admin login page."""
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin"] = True  # Set admin session
+            return redirect(url_for("admin"))
+        return "Invalid Credentials!", 403
+    return render_template("admin_login.html")
+
+
+
+@app.route("/admin")
+def admin():
+    """Admin panel (Only accessible if logged in as admin)."""
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))  # Restrict direct access
+    return render_template("admin.html")
+
+
+
+@app.route("/logout")
+def logout():
+    """Logout user and admin."""
+    session.pop("admin", None)
+    return redirect(url_for("home"))
+
+
+
+
+
+
+
+
+
+
+
+#------------admin part end----------------#
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -653,4 +703,6 @@ def update_global_leaderboard(room, players, player, score):
 
 # Main Execution
 if __name__ == '__main__':
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, host='0.0.0.0')
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True, host='0.0.0.0',port=5000)
+
+
