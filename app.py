@@ -19,9 +19,8 @@ from authlib.integrations.flask_client import OAuth
 import random
 import nltk
 from werkzeug.utils import secure_filename
-
-
-
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, login_required, logout_user, current_user, LoginManager
 
 
 
@@ -33,12 +32,21 @@ nltk.download('stopwords')
 nltk.download('vader_lexicon')
 
 
+
+
 # Initialize Flask App
 app = Flask(__name__)
 
 socketio = SocketIO(app, async_mode='eventlet')  # ✅ Ensure eventlet is used
 
 app.secret_key = 'your_unique_secret_key'  # Replace with a secure key
+
+
+app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with your secret key
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # SQLite database
+db = SQLAlchemy(app)
+
+
 
 # Folder configurations
 UPLOAD_FOLDER = 'uploads'
@@ -103,10 +111,11 @@ def home():
 def home_page():
     return render_template('home.html')
     
+
+
+
+
 #------------admin system part-----------------#
-
-
-
 
 # Dummy credentials (Replace with a database in production)
 ADMIN_USERNAME = "admin"
@@ -124,8 +133,6 @@ def admin_login():
         return "Invalid Credentials!", 403
     return render_template("admin_login.html")
 
-
-
 @app.route("/admin")
 def admin():
     """Admin panel (Only accessible if logged in as admin)."""
@@ -133,25 +140,127 @@ def admin():
         return redirect(url_for("admin_login"))  # Restrict direct access
     return render_template("admin.html")
 
-
-
 @app.route("/logout")
 def logout():
     """Logout user and admin."""
     session.pop("admin", None)
     return redirect(url_for("home"))
 
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'  # Redirect to login if not logged in
 
+# User Model for Authentication and Management
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)  # To check if user is admin
 
+    def __repr__(self):
+        return f"User('{self.username}', '{self.is_admin}')"
 
+# Traffic Stats Model (optional, for traffic tracking)
+class TrafficStat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(100), nullable=False)
+    page_visited = db.Column(db.String(100), nullable=False)
+    count = db.Column(db.Integer, default=0)
 
+    def __repr__(self):
+        return f"TrafficStat('{self.date}', '{self.page_visited}', '{self.count}')"
 
+# Create the database tables if they don't exist
+with app.app_context():
+    db.create_all()
 
+# Load user for login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:  # You should hash passwords in production
+            if user.is_admin:
+                login_user(user)
+                return redirect(url_for('admin_dashboard'))
+            else:
+                return 'Unauthorized', 403
+        else:
+            return 'Invalid credentials', 401
+    return render_template('admin-login.html')
 
+@app.route('/admin-dashboard')
+@login_required
+def admin_dashboard():
+    if not current_user.is_admin:
+        return 'Unauthorized', 403
+    
+    # Fetch users and traffic stats for admin panel
+    users = User.query.all()
+    traffic_stats = TrafficStat.query.all()
+    
+    return render_template('admin.html', users=users, traffic_stats=traffic_stats)
 
+@app.route('/admin-update-user/<int:user_id>', methods=['POST'])
+@login_required
+def admin_update_user(user_id):
+    if not current_user.is_admin:
+        return 'Unauthorized', 403
+    
+    user = User.query.get_or_404(user_id)
+    user.is_admin = request.form.get('is_admin') == 'on'  # Update user role
+    
+    db.session.commit()
+    
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin-delete-user/<int:user_id>', methods=['POST'])
+@login_required
+def admin_delete_user(user_id):
+    if not current_user.is_admin:
+        return 'Unauthorized', 403
+    
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/traffic-stats')
+@login_required
+def traffic_stats():
+    if not current_user.is_admin:
+        return 'Unauthorized', 403
+    
+    traffic = TrafficStat.query.all()
+    return render_template('admin.html', traffic=traffic)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+# Sample page to increment traffic
+@app.route('/page-visit/<page_name>')
+def page_visit(page_name):
+    # Track page visits for traffic stats
+    traffic = TrafficStat.query.filter_by(page_visited=page_name).first()
+    if traffic:
+        traffic.count += 1
+    else:
+        new_traffic = TrafficStat(date='2025-02-17', page_visited=page_name, count=1)
+        db.session.add(new_traffic)
+    db.session.commit()
+    return f'{page_name} visited.'
 
 #------------admin part end----------------#
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
