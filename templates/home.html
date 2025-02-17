@@ -611,9 +611,14 @@ div, i {
     <ul class="menu-options">
         <li><button href="/signup" onclick="signup()">Signup</button></li>
         <li><button href="/login" onclick="login()">Login</button></li>
-        <li><button disabled>Coming Soon</button></li>
-        <li><button disabled>Coming Soon</button></li>
+        <li><a href="{{ url_for('admin_login') }}"><button>Admin Login</button></a></li>
+        <li><a href="{{ url_for('/logout') }}"><button>User Login</button></a></li>
     </ul>
+
+    
+    
+
+
 </div><br>
 <h1>WELCOME TO NEXORA'S HOME PAGE</h1>
 <button class="signup-btn" id="signup-btn" onclick=signUp()>Sign Up</button>
