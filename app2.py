@@ -1,6 +1,14 @@
 import eventlet
 eventlet.monkey_patch()  # Apply monkey patching before importing anything
 
+from flask import Flask
+import socketio
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import wordnet, stopwords
+from nltk import ne_chunk, pos_tag
+from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk import FreqDist
+import numpy
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, send_from_directory, jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import os
@@ -14,32 +22,17 @@ from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, login_required, logout_user, current_user, LoginManager
 from dotenv import load_dotenv
-from nltk.sentiment import SentimentIntensityAnalyzer  # Add this import statement
 
-# Initialize Flask App
-app = Flask(__name__)
 
-# Initialize SentimentIntensityAnalyzer
-sia = SentimentIntensityAnalyzer()
-"""
-# Ensure necessary NLTK data is downloaded (only once)
-@app.before_first_request
-def download_nltk_data():
-    # Check if NLTK data is already downloaded to prevent repeated downloads
-    nltk_data_path = '/opt/render/nltk_data'
-    if not os.path.exists(nltk_data_path):
-        nltk.download('vader_lexicon', download_dir=nltk_data_path)  
-        nltk.download('punkt', download_dir=nltk_data_path)
-        nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_path)
-        nltk.download('wordnet', download_dir=nltk_data_path)
-        nltk.download('stopwords', download_dir=nltk_data_path)
-"""
 
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('vader_lexicon')
+
+
+
 
 socketio = SocketIO(app, async_mode='eventlet')  # ✅ Ensure eventlet is used
 
