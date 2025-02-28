@@ -16,19 +16,20 @@ from flask_login import UserMixin, login_user, login_required, logout_user, curr
 from dotenv import load_dotenv
 from nltk.sentiment import SentimentIntensityAnalyzer  # Add this import statement
 
-# Ensure necessary NLTK data is downloaded (only once)
-if not os.path.exists('/opt/render/nltk_data'):
-    nltk.download('vader_lexicon')  # Ensure vader_lexicon is downloaded
-    nltk.download('punkt')
-    nltk.download('averaged_perceptron_tagger')
-    nltk.download('wordnet')
-    nltk.download('stopwords')
+# Initialize Flask App
+app = Flask(__name__)
+
+# Ensure necessary NLTK data is downloaded (only once) within the app context
+with app.app_context():
+    if not os.path.exists('/opt/render/nltk_data'):
+        nltk.download('vader_lexicon')  # Ensure vader_lexicon is downloaded
+        nltk.download('punkt')
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('wordnet')
+        nltk.download('stopwords')
 
 # Initialize SentimentIntensityAnalyzer
 sia = SentimentIntensityAnalyzer()
-
-# Initialize Flask App
-app = Flask(__name__)
 
 socketio = SocketIO(app, async_mode='eventlet')  # ✅ Ensure eventlet is used
 
@@ -204,6 +205,7 @@ def google_signup_callback():
     # For now, let's assume the user is signed up successfully
     flash("Signup successful with Google!")
     return redirect(url_for('dashboard'))
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
