@@ -13,6 +13,12 @@
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Signup</button>
         </form>
+        
+        <!-- Google Signup Button -->
+        <a href="{{ url_for('google_signup') }}">
+            <button type="button">Signup with Google</button>
+        </a>
+
         <p>Already have an account? <a href="/login">Login here</a></p>
     </div>
 </body>
