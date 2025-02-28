@@ -122,7 +122,7 @@ def home_page():
 
 
 
-"" "
+"""
 #------------admin system part-----------------#
 
 # Dummy credentials (Replace with a database in production)
@@ -267,7 +267,8 @@ def page_visit(page_name):
     db.session.commit()
     return f'{page_name} visited.'
 
-#------------admin part end----------------#"" "
+#------------admin part end----------------#
+"""
 
 
 @app.route('/signup', methods=['GET', 'POST'])
