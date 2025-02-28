@@ -60,15 +60,23 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER1'] = UPLOAD_FOLDER1
 # OAuth Configuration
 oauth = OAuth(app)
+
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
 google = oauth.register(
-    name='google',
-    client_id='YOUR_CLIENT_ID',
-    client_secret='YOUR_CLIENT_SECRET',
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    client_kwargs={'scope': 'openid email profile'}
+    name="google",
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    access_token_url="https://oauth2.googleapis.com/token",
+    api_base_url="https://www.googleapis.com/oauth2/v1/",
+    client_kwargs={"scope": "openid email profile"}
 )
+
+
+
 rooms={}
 # SQLite database initialization
 conn = sqlite3.connect('chat.db', check_same_thread=False)
