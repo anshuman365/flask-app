@@ -317,6 +317,30 @@ def login():
         return redirect(url_for('login'))
     return render_template('login.html')
 
+# Detect environment (Local vs Render)
+if os.getenv("RENDER") == "true":
+    REDIRECT_URI = "https://nexora-industries.onrender.com/google/callback"
+else:
+    REDIRECT_URI = "http://127.0.0.1:5000/google/callback"
+@app.route('/google/callback')
+def google_callback():
+    token = google.authorize_access_token()
+    user_info = google.get('userinfo').json()
+
+    if not user_info:
+        flash("Google login failed, please try again.")
+        return redirect(url_for('login'))
+
+    # Store user info in session
+    session.permanent = True
+    session['username'] = user_info['name']
+    session['email'] = user_info['email']
+    session['profile_pic'] = user_info['picture']
+
+    flash("Login successful!")
+    return redirect(url_for('dashboard'))
+
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
