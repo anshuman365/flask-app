@@ -126,7 +126,9 @@ def home_page():
     return render_template('home.html')
     
 
-
+@app.route('/admin-login')
+def admin_login():
+    return render_template('admin_login.html')
 
 """
 #------------admin system part-----------------#
