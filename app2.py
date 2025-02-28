@@ -177,14 +177,16 @@ def google_callback():
 # Route to initiate Google OAuth for signup
 @app.route('/google/signup')
 def google_signup():
-    redirect_uri = url_for('google_signup_callback', _external=True)  # Callback URL for Google
+    # Define the redirect URI for Google signup callback
+    redirect_uri = url_for('google_signup_callback', _external=True)
     return google.authorize_redirect(redirect_uri)
 
-# Google OAuth callback to handle the response
+
 @app.route('/google/signup/callback')
 def google_signup_callback():
-    token = google.authorize_access_token()
-    user_info = google.get('userinfo').json()
+    # Google OAuth callback logic
+    token = google.authorize_access_token()  # Get the OAuth token
+    user_info = google.get('userinfo').json()  # Fetch user information
 
     if not user_info:
         flash("Google signup failed, please try again.")
@@ -196,12 +198,10 @@ def google_signup_callback():
     session['email'] = user_info['email']
     session['profile_pic'] = user_info['picture']
 
-    # You can also save the user info to your database if needed (for future reference)
-    # For now, we'll assume that the user is successfully signed up.
-
+    # Optionally, save the user info in your database
+    # For now, let's assume the user is signed up successfully
     flash("Signup successful with Google!")
     return redirect(url_for('dashboard'))
-
 @app.route('/logout')
 def logout():
     session.pop('username', None)
