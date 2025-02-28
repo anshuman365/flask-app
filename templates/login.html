@@ -16,7 +16,9 @@
 </form>
 <p>New user? <a href="/signup">Signup here</a></p>
 <p>Or</p>
-<a href="/google_login" class="button">Login with Google</a>
+<a href="{{ url_for('google_login') }}">
+    <button class="button">Login with Google</button>
+</a>
         
 
     </div>
