@@ -32,6 +32,8 @@ nltk.download('stopwords')
 nltk.download('vader_lexicon')
 
 
+# Initialize Flask App
+app = Flask(__name__)
 
 
 socketio = SocketIO(app, async_mode='eventlet')  # ✅ Ensure eventlet is used
