@@ -54,6 +54,8 @@ oauth = OAuth(app)
 # Load environment variables from .env file
 load_dotenv()
 
+redirect_uri = url_for('google_signup_callback', _external=True)  # This should resolve to your actual callback URL
+
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
