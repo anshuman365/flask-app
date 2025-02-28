@@ -131,7 +131,7 @@ ADMIN_PASSWORD = "password"
 
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
-    #"""Admin login page."""
+    #Admin login page.
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -143,14 +143,14 @@ def admin_login():
 
 @app.route("/admin")
 def admin():
-    #"""Admin panel (Only accessible if logged in as admin)."""
+    #Admin panel (Only accessible if logged in as admin).
     if "admin" not in session:
         return redirect(url_for("admin_login"))  # Restrict direct access
     return render_template("admin.html")
 
 @app.route("/logout")
 def logout():
-    #"""Logout user and admin."""
+    #Logout user and admin.
     session.pop("admin", None)
     return redirect(url_for("home"))
 
