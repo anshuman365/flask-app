@@ -16,16 +16,16 @@ from flask_login import UserMixin, login_user, login_required, logout_user, curr
 from dotenv import load_dotenv
 from nltk.sentiment import SentimentIntensityAnalyzer  # Add this import statement
 
-nltk.download('vader_lexicon')  # Ensure vader_lexicon is downloaded
+# Ensure necessary NLTK data is downloaded (only once)
+if not os.path.exists('/opt/render/nltk_data'):
+    nltk.download('vader_lexicon')  # Ensure vader_lexicon is downloaded
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('wordnet')
+    nltk.download('stopwords')
 
-# Now you can initialize SentimentIntensityAnalyzer
+# Initialize SentimentIntensityAnalyzer
 sia = SentimentIntensityAnalyzer()
-
-
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-nltk.download('stopwords')
 
 # Initialize Flask App
 app = Flask(__name__)
