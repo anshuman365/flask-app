@@ -21,7 +21,7 @@ import nltk
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, login_required, logout_user, current_user, LoginManager
-
+from dotenv import load_dotenv
 
 
 
@@ -62,15 +62,21 @@ app.config['UPLOAD_FOLDER1'] = UPLOAD_FOLDER1
 oauth = OAuth(app)
 
 
+
+
+# Load environment variables from .env file
+load_dotenv()
+
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
 google = oauth.register(
     name="google",
     client_id=GOOGLE_CLIENT_ID,
     client_secret=GOOGLE_CLIENT_SECRET,
-    authorize_url="https://accounts.google.com/o/oauth2/auth",
-    access_token_url="https://oauth2.googleapis.com/token",
+    authorize_url=os.getenv("GOOGLE_AUTH_URI"),
+    access_token_url=os.getenv("GOOGLE_TOKEN_URI"),
     api_base_url="https://www.googleapis.com/oauth2/v1/",
     client_kwargs={"scope": "openid email profile"}
 )
