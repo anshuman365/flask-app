@@ -5,40 +5,28 @@ import os
 from dotenv import load_dotenv
 import random
 import base64
+from threading import Thread
+import log_parser
 
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'secret_key_here'
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
-# API Keys configuration
-"""
 API_KEYS = {
     'NASA': os.getenv('NASA_API_KEY'),
     'NEWS': os.getenv('NEWS_API_KEY'),
     'TREFLE': os.getenv('TREFLE_API_KEY'),
     'SPOTIFY': os.getenv('SPOTIFY_CLIENT_ID'),
-    'OMDB': os.getenv('OMDB_API_KEY')
-}
-"""
-API_KEYS = {
-    'NASA':'oXRXDJoQOeHSuMnQL8d5FjKhPOkW8cmHMoh6q9gj',
-    'NEWS':'f1d7138936044df2a4d4699c676e3590',
-    'TREFLE': 'RwFb1gqvjU_jmV_Pb_-9hCVhkBoDxejjJdXXQdJsVs0',
-    'SPOTIFY': " ",
-    'SPOTIFY_CLIENT_SECRET':' ',
-    'OMDB':'88777516',
-    'UNSPLASH':'9cPFpXdk4EA7HviMOpuuRQjgNykIJCwfJu_witcY_MY'
+    'SPOTIFY_CLIENT_SECRET': os.getenv('SPOTIFY_CLIENT_SECRET'),
+    'OMDB': os.getenv('OMDB_API_KEY'),
+    'UNSPLASH': os.getenv('UNSPLASH_ACCESS_KEY')
 }
 
-CLIENT_ID = "9855e1465f724d85a09689c50432d954"
-CLIENT_SECRET = "6256baf973a14d2095905acf1ca9e938"
-REDIRECT_URI = "http://127.0.0.1:8000/music"
-
-SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
-SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
-SCOPE = "user-top-read playlist-modify-public"
-access_key = "9cPFpXdk4EA7HviMOpuuRQjgNykIJCwfJu_witcY_MY"
+CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
+SCOPE = os.getenv('SPOTIFY_SCOPE')
 
 def get_wiki_image(scientific_name):
     try:
@@ -276,5 +264,8 @@ def top_tracks():
     for track in tracks 
 ])
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    monitor_thread = Thread(target=log_parser.monitor_logs)
+    monitor_thread.daemon = True
+    monitor_thread.start()
     app.run(debug=True, port=8000)
