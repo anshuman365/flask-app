@@ -95,24 +95,39 @@ def search_plants():
     if request.method == 'POST':
         search_term = request.form.get('search', '').strip()
         if search_term:
-            wiki_api_url = "https://en.wikipedia.org/w/api.php"
-            params = {
+            search_url = "https://en.wikipedia.org/w/api.php"
+            search_params = {
                 'action': 'query',
+                'format': 'json',
                 'list': 'search',
-                'srsearch': search_term,
-                'format': 'json'
+                'srsearch': search_term
             }
 
             try:
-                res = requests.get(wiki_api_url, params=params)
-                res.raise_for_status()
-                data = res.json()
-                search_results = data.get('query', {}).get('search', [])
+                response = requests.get(search_url, params=search_params)
+                response.raise_for_status()
+                search_results = response.json().get('query', {}).get('search', [])
 
-                for item in search_results:
-                    title = item.get('title')
+                for result in search_results:
+                    title = result['title']
                     page_url = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
-                    image_url = f"https://source.unsplash.com/featured/?plant,{title}"
+
+                    # Now fetch thumbnail
+                    details_url = "https://en.wikipedia.org/w/api.php"
+                    details_params = {
+                        'action': 'query',
+                        'format': 'json',
+                        'prop': 'pageimages',
+                        'titles': title,
+                        'pithumbsize': 300
+                    }
+
+                    img_response = requests.get(details_url, params=details_params)
+                    img_data = img_response.json()
+                    pages = img_data.get('query', {}).get('pages', {})
+                    page = next(iter(pages.values()))
+                    image_url = page.get('thumbnail', {}).get('source', '/static/no_image.jpg')
+
                     plants.append({
                         'title': title,
                         'page_url': page_url,
