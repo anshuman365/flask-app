@@ -7,48 +7,71 @@ from email.mime.text import MIMEText
 from threading import Thread, Lock
 from datetime import datetime
 
-LOG_FILE = "access.log"  # path to your Flask log file
-EMAIL_INTERVAL = 7200  # 2 hours in seconds
+LOG_FILE = "access.log"
+EMAIL_INTERVAL = 7200  # 2 hours
 
 # Email config
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_FROM = "nexoraindustries@gmail.com"
-EMAIL_PASSWORD = "qvwi hqax ehqx hsgw"  # Use an app-specific password
-EMAIL_TO = "sarvarsingh496@example.com"
+EMAIL_PASSWORD = "qvwi hqax ehqx hsgw"
+EMAIL_TO = "sarvarsingh496@gmail.com"
 
+# Updated regex to handle all log formats
+#log_pattern = re.compile(
+#    r'(?P<ip>\S+) - - \[(?P<timestamp>.*?)\] "(?P<method>\w+) (?P<path>\S+).*?" (?P<status>\d+) (?P<size>\d+|-) "(?P<referrer>.*?)" "(?P<agent>.*?)"'
+#)
+# Update the regex pattern
 log_pattern = re.compile(
-    r'(?P<ip>[\d.]+) - - (?P<timestamp>[^]+) "(?P<method>\w+) (?P<path>[^ ]+) [^"]+" (?P<status>\d+) (?P<size>\d+) "(?P<referrer>[^"]*)" "(?P<agent>[^"]+)"'
+    r'(?P<ip>\S+) - - \[(?P<timestamp>.+?)\] "(?P<method>\w+) (?P<path>\S+).*?" (?P<status>\d+) (?P<size>\d+|-) "(?P<referrer>.*?)" "(?P<agent>.*?)"'
 )
+
 
 log_storage = []
 log_lock = Lock()
 
 def parse_log():
-    f=open(LOG_FILE, "a") 
-    f.close()
-    with open(LOG_FILE, "r") as file:
-        lines = file.readlines()
+    try:
+        with open(LOG_FILE, "r") as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        return []
+
     new_entries = []
     for line in lines:
+        line = line.strip()
+        if not line or " - - [" not in line:
+            continue  # Skip empty lines and non-request logs
+
         match = log_pattern.match(line)
         if match:
-            timestamp_str = match.group("timestamp").split()[0]
-            timestamp = datetime.strptime(timestamp_str, "%d/%b/%Y:%H:%M:%S")
-            new_entries.append({
-                "time": timestamp,
-                "method": match.group("method"),
-                "path": match.group("path"),
-                "status": match.group("status"),
-                "agent": match.group("agent"),
-                "referrer": match.group("referrer"),
-                "ip": match.group("ip")
-            })
+            try:
+                # Parse timestamp (ignore timezone)
+                timestamp_str = match.group("timestamp").split()[0]
+                timestamp = datetime.strptime(timestamp_str, "%d/%b/%Y:%H:%M:%S")
+                
+                new_entries.append({
+                    "time": timestamp,
+                    "method": match.group("method"),
+                    "path": match.group("path"),
+                    "status": int(match.group("status")),
+                    "agent": match.group("agent"),
+                    "ip": match.group("ip")
+                })
+            except Exception as e:
+                print(f"Failed to parse log line: {line}\nError: {e}")
     return new_entries
+
+def get_and_clear_logs():
+    global log_storage
+    with log_lock:
+        logs = list(log_storage)
+        log_storage.clear()
+        return logs
 
 def send_email(logs):
     if not logs:
-        return
+        return False
     body = "\n".join(
         f"{entry['time']} - {entry['ip']} - {entry['method']} {entry['path']} - {entry['status']} - {entry['agent']}"
         for entry in logs
@@ -64,8 +87,10 @@ def send_email(logs):
             server.login(EMAIL_FROM, EMAIL_PASSWORD)
             server.send_message(msg)
             print(f"[EMAIL SENT] {len(logs)} entries sent.")
+            return True
     except Exception as e:
         print("[EMAIL ERROR]", e)
+        return False
 
 def monitor_logs():
     last_sent_time = time.time()

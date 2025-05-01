@@ -5,13 +5,22 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="mb-3">Plant Search</h2>
-            <form method="post" class="search-form">
+            <form method="post" class="search-form" id="plant-form">
                 <div class="input-group mx-auto" style="max-width: 500px;">
                     <input type="text" name="search" class="form-control" 
-                           value="{{ search_term }}" placeholder="Search plants">
-                    <button type="submit" class="btn btn-success">Search</button>
+                           value="{{ search_term }}" placeholder="Search plants" {% if retry_after %}disabled{% endif %}>
+                    <button type="submit" class="btn btn-success" {% if retry_after %}disabled{% endif %}>Search</button>
                 </div>
             </form>
+
+            {% if error_msg %}
+            <div id="error-message" class="alert alert-warning mt-3">
+                {{ error_msg }}
+                {% if retry_after %}
+                <br>Retrying in <span id="countdown">{{ retry_after }}</span> seconds...
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -28,11 +37,30 @@
             {% endfor %}
         </div>
 
-        {% if not plants %}
+        {% if not plants and not error_msg %}
         <div class="text-center text-muted mt-4">
             <p>No results found. Try a different search.</p>
         </div>
         {% endif %}
     </div>
 </section>
+
+{% if retry_after %}
+<script>
+  let seconds = {{ retry_after }};
+  const countdown = document.getElementById('countdown');
+  const input = document.querySelector("input[name='search']");
+  const button = document.querySelector("button[type='submit']");
+  const interval = setInterval(() => {
+    seconds -= 1;
+    countdown.innerText = seconds;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      input.disabled = false;
+      button.disabled = false;
+      document.getElementById('error-message').style.display = 'none';
+    }
+  }, 1000);
+</script>
+{% endif %}
 {% endblock %}

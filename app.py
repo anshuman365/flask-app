@@ -7,6 +7,10 @@ import random
 import base64
 from threading import Thread
 import log_parser
+import logging
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.serving import run_simple
+from datetime import datetime
 
 load_dotenv()
 
@@ -54,16 +58,31 @@ def get_plant_image(plant_name):
     url = f"https://api.unsplash.com/search/photos?query={plant_name}&client_id={access_key}"
     response = requests.get(url)
     data = response.json()
-    if data["results"]:
+    
+    if response.status_code == 200 and 'results' in data and data['results']:
         photo = data["results"][0]
         trigger_unsplash_download(photo['id'])  # log the download
         return photo["urls"]["regular"]
-    return "/static/no_image.jpg"
+    else:
+        print(f"Error fetching image for {plant_name}: {response.status_code}")
+        return "/static/no_image.jpg"
 
 def trigger_unsplash_download(photo_id):
     url = f"https://api.unsplash.com/photos/{photo_id}/download"
     headers = {"Authorization": f"Client-ID {API_KEYS['UNSPLASH']}"}
     requests.get(url, headers=headers)
+
+@app.after_request
+def log_request(response):
+    """Log all requests in Apache Combined Log Format"""
+    timestamp = datetime.now().strftime('%d/%b/%Y:%H:%M:%S')
+    log_line = f'{request.remote_addr} - - [{timestamp}] "{request.method} {request.path} HTTP/1.1" {response.status_code} {response.content_length} "{request.referrer}" "{request.user_agent}"\n'
+    
+    # Write to access.log
+    with open('access.log', 'a') as f:
+        f.write(log_line)
+    
+    return response
 
 @app.route('/')
 def home():
@@ -97,6 +116,8 @@ def number_format(value):
 def search_plants():
     plants = []
     search_term = ""
+    retry_after = 0
+    error_msg = None
 
     if request.method == 'POST':
         search_term = request.form.get('search', '').strip()
@@ -117,8 +138,6 @@ def search_plants():
                 for result in search_results:
                     title = result['title']
                     page_url = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
-
-                    # First try Wikipedia thumbnail
                     wiki_image = get_wiki_image(title)
                     image_url = wiki_image if wiki_image else get_plant_image(title)
 
@@ -128,10 +147,16 @@ def search_plants():
                         'image_url': image_url
                     })
 
-            except Exception as e:
+            except requests.exceptions.HTTPError as e:
+                if response.status_code == 429:
+                    error_msg = "Too many requests. Please wait before retrying."
+                    retry_after = 20  # seconds
+                else:
+                    error_msg = "Error fetching plant data."
                 print("Error fetching plant data:", e)
 
-    return render_template('plants.html', plants=plants, search_term=search_term)
+    return render_template('plants.html', plants=plants, search_term=search_term,
+                           retry_after=retry_after, error_msg=error_msg)
 
 # NASA APOD
 @app.route('/nasa')
@@ -264,8 +289,30 @@ def top_tracks():
     for track in tracks 
 ])
 
-if __name__ == "__main__":
-    monitor_thread = Thread(target=log_parser.monitor_logs)
-    monitor_thread.daemon = True
-    monitor_thread.start()
-    app.run(debug=True, port=8000)
+
+@app.route('/send-logs', methods=['POST'])
+def send_logs():
+    logs = log_parser.get_and_clear_logs()
+    if not logs:
+        flash('No logs available to send.', 'info')
+    else:
+        success = log_parser.send_email(logs)
+        if success:
+            flash('Logs sent successfully!', 'success')
+        else:
+            flash('Failed to send logs. Please try again.', 'danger')
+    return redirect(url_for('home'))
+
+# app.py (replace the existing logging config)
+if __name__ == '__main__':
+    # Remove existing logging config
+    werkzeug_log = logging.getLogger('werkzeug')
+    werkzeug_log.disabled = True  # Disable Werkzeug's default logs
+
+    # Start monitor thread safely
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
+        monitor_thread = Thread(target=log_parser.monitor_logs)
+        monitor_thread.daemon = True
+        monitor_thread.start()
+
+    app.run(debug=True, port=8000, use_reloader=True)
