@@ -87,40 +87,35 @@ def number_format(value):
     return f"{value:,}"
 
 # Plants API
-@app.route("/plants", methods=["GET", "POST"])
+@app.route('/plants', methods=['GET', 'POST'])
 def search_plants():
     if request.method == 'POST':
-        name = request.form.get("search")
-        if not name:
-            return redirect(url_for('home'))
+        query = request.form.get('plant_name')
+        if query:
+            wiki_api_url = 'https://en.wikipedia.org/w/api.php'
+            search_params = {
+                'action': 'query',
+                'format': 'json',
+                'list': 'search',
+                'srsearch': query
+            }
+            try:
+                search_response = requests.get(wiki_api_url, params=search_params)
+                search_response.raise_for_status()
 
-        wiki_api_url = "https://en.wikipedia.org/w/api.php"
-        search_params = {
-            "action": "query",
-            "list": "search",
-            "srsearch": name,
-            "format": "json"
-        }
-
-        search_response = requests.get(wiki_api_url, params=search_params).json()
-        search_results = search_response.get("query", {}).get("search", [])
-        
-        plants = []
-        for result in search_results[:30]:
-            title = result.get("title")
-            page_url = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
-            image_url = get_wiki_image(title)
-
-            plants.append({
-                "title": title,
-                "page_url": page_url,
-                "image_url": image_url or "/static/no_image.jpg"
-            })
-
-        return render_template("plants.html", plants=plants, search_term=name)
-    
-    # Handle GET request: simply render the page without search results
-    return render_template("plants.html", plants=[], search_term="")
+                # Safely parse JSON
+                data = search_response.json()
+                search_results = data.get('query', {}).get('search', [])
+            except requests.exceptions.RequestException as e:
+                print(f"Request failed: {e}")
+                search_results = []
+            except ValueError:
+                print("Invalid JSON response from Wikipedia.")
+                search_results = []
+        else:
+            search_results = []
+        return render_template('plants.html', search_results=search_results)
+    return render_template('plants.html')
 
 # NASA APOD
 @app.route('/nasa')
