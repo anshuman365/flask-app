@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Cat Facts{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Random Cat Facts</h2>
+            <a href="/cat-facts" class="btn btn-primary">Refresh Facts</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for fact in facts %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-cat fa-2x text-primary me-3"></i>
+                            <h5 class="card-title mb-0">Fact #{{ loop.index }}</h5>
+                        </div>
+                        <p class="card-text">{{ fact.fact }}</p>
+                        <p class="text-muted mb-0">Length: {{ fact.length }} characters</p>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="alert alert-warning">No cat facts available</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

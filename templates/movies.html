@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Movie Search{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Movie Search</h2>
+            <form class="search-form">
+                <div class="input-group">
+                    <input type="text" name="title" class="form-control" 
+                           value="{{ movie.Title if movie }}" placeholder="Search movies">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+
+        {% if movie and movie.Response != 'False' %}
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card">
+                    {% if movie.Poster and movie.Poster != 'N/A' %}
+                    <img src="{{ movie.Poster }}" class="card-img-top" alt="Poster">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ movie.Title }}</h3>
+                        <p class="card-subtitle mb-2 text-muted">
+                            {{ movie.Year }} | {{ movie.Runtime }} | {{ movie.Genre }}
+                        </p>
+                        <p class="card-text">{{ movie.Plot }}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Director:</strong> {{ movie.Director }}</p>
+                                <p><strong>Actors:</strong> {{ movie.Actors }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Rating:</strong> {{ movie.imdbRating }}/10 ({{ movie.imdbVotes }} votes)</p>
+                                <p><strong>Awards:</strong> {{ movie.Awards }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif movie %}
+        <div class="alert alert-warning text-center">Movie not found</div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}NASA APOD{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <h2 class="text-center mb-5">NASA Astronomy Picture of the Day</h2>
+        
+        {% if apod %}
+        <div class="card mb-4">
+            {% if apod.media_type == 'image' %}
+            <img src="{{ apod.url }}" class="card-img-top" alt="APOD">
+            {% else %}
+            <div class="ratio ratio-16x9">
+                <iframe src="{{ apod.url }}" allowfullscreen></iframe>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ apod.title }}</h3>
+                <p class="card-text">{{ apod.explanation }}</p>
+                <p class="text-muted">Date: {{ apod.date }}</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-danger">Failed to load APOD data</div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

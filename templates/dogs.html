@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Dog Pictures{% endblock %}
+{% block content %}
+<section class="api-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Random Dog Breeds</h2>
+            <a href="/dogs" class="btn btn-primary">Refresh</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for dog in dogs %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ dog.image_url }}" class="card-img-top" alt="Dog Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ dog.breed_info.name }}</h5>
+                        <p><strong>Bred For:</strong> {{ dog.breed_info.bred_for or 'Not specified' }}</p>
+                        <p><strong>Temperament:</strong> {{ dog.breed_info.temperament or 'Not specified' }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

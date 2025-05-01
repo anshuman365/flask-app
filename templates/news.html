@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}News Headlines{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <h2 class="text-center mb-4">Latest News Headlines</h2>
+
+        <!-- Country selection form -->
+        <form method="get" action="/news" class="mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                	<label for="country" class="me-2 fw-bold">Choose a country:</label>
+                    <select name="country" class="form-select" onchange="this.form.submit()">
+                        <option value="us" {% if selected_country == 'us' %}selected{% endif %}>United States</option>
+                        <option value="ae" {% if selected_country == 'ae' %}selected{% endif %}>United Arab Emirates</option>
+                        <option value="ar" {% if selected_country == 'ar' %}selected{% endif %}>Argentina</option>
+                        <option value="at" {% if selected_country == 'at' %}selected{% endif %}>Austria</option>
+                        <option value="au" {% if selected_country == 'au' %}selected{% endif %}>Australia</option>
+                        <option value="be" {% if selected_country == 'be' %}selected{% endif %}>Belgium</option>
+                        <option value="bg" {% if selected_country == 'bg' %}selected{% endif %}>Bulgaria</option>
+                        <option value="br" {% if selected_country == 'br' %}selected{% endif %}>Brazil</option>
+                        <option value="ca" {% if selected_country == 'ca' %}selected{% endif %}>Canada</option>
+                        <option value="ch" {% if selected_country == 'ch' %}selected{% endif %}>Switzerland</option>
+                        <option value="cn" {% if selected_country == 'cn' %}selected{% endif %}>China</option>
+                        <option value="co" {% if selected_country == 'co' %}selected{% endif %}>Colombia</option>
+                        <option value="cu" {% if selected_country == 'cu' %}selected{% endif %}>Cuba</option>
+                        <option value="cz" {% if selected_country == 'cz' %}selected{% endif %}>Czech Republic</option>
+                        <option value="de" {% if selected_country == 'de' %}selected{% endif %}>Germany</option>
+                        <option value="eg" {% if selected_country == 'eg' %}selected{% endif %}>Egypt</option>
+                        <option value="fr" {% if selected_country == 'fr' %}selected{% endif %}>France</option>
+                        <option value="gb" {% if selected_country == 'gb' %}selected{% endif %}>United Kingdom</option>
+                        <option value="gr" {% if selected_country == 'gr' %}selected{% endif %}>Greece</option>
+                        <option value="hk" {% if selected_country == 'hk' %}selected{% endif %}>Hong Kong</option>
+                        <option value="hu" {% if selected_country == 'hu' %}selected{% endif %}>Hungary</option>
+                        <option value="id" {% if selected_country == 'id' %}selected{% endif %}>Indonesia</option>
+                        <option value="ie" {% if selected_country == 'ie' %}selected{% endif %}>Ireland</option>
+                        <option value="il" {% if selected_country == 'il' %}selected{% endif %}>Israel</option>
+                        <option value="in" {% if selected_country == 'in' %}selected{% endif %}>India</option>
+                        <option value="it" {% if selected_country == 'it' %}selected{% endif %}>Italy</option>
+                        <option value="jp" {% if selected_country == 'jp' %}selected{% endif %}>Japan</option>
+                        <option value="kr" {% if selected_country == 'kr' %}selected{% endif %}>South Korea</option>
+                        <option value="lt" {% if selected_country == 'lt' %}selected{% endif %}>Lithuania</option>
+                        <option value="lv" {% if selected_country == 'lv' %}selected{% endif %}>Latvia</option>
+                        <option value="ma" {% if selected_country == 'ma' %}selected{% endif %}>Morocco</option>
+                        <option value="mx" {% if selected_country == 'mx' %}selected{% endif %}>Mexico</option>
+                        <option value="my" {% if selected_country == 'my' %}selected{% endif %}>Malaysia</option>
+                        <option value="ng" {% if selected_country == 'ng' %}selected{% endif %}>Nigeria</option>
+                        <option value="nl" {% if selected_country == 'nl' %}selected{% endif %}>Netherlands</option>
+                        <option value="no" {% if selected_country == 'no' %}selected{% endif %}>Norway</option>
+                        <option value="nz" {% if selected_country == 'nz' %}selected{% endif %}>New Zealand</option>
+                        <option value="ph" {% if selected_country == 'ph' %}selected{% endif %}>Philippines</option>
+                        <option value="pl" {% if selected_country == 'pl' %}selected{% endif %}>Poland</option>
+                        <option value="pt" {% if selected_country == 'pt' %}selected{% endif %}>Portugal</option>
+                        <option value="ro" {% if selected_country == 'ro' %}selected{% endif %}>Romania</option>
+                        <option value="rs" {% if selected_country == 'rs' %}selected{% endif %}>Serbia</option>
+                        <option value="ru" {% if selected_country == 'ru' %}selected{% endif %}>Russia</option>
+                        <option value="sa" {% if selected_country == 'sa' %}selected{% endif %}>Saudi Arabia</option>
+                        <option value="se" {% if selected_country == 'se' %}selected{% endif %}>Sweden</option>
+                        <option value="sg" {% if selected_country == 'sg' %}selected{% endif %}>Singapore</option>
+                        <option value="si" {% if selected_country == 'si' %}selected{% endif %}>Slovenia</option>
+                        <option value="sk" {% if selected_country == 'sk' %}selected{% endif %}>Slovakia</option>
+                        <option value="th" {% if selected_country == 'th' %}selected{% endif %}>Thailand</option>
+                        <option value="tr" {% if selected_country == 'tr' %}selected{% endif %}>Turkey</option>
+                        <option value="tw" {% if selected_country == 'tw' %}selected{% endif %}>Taiwan</option>
+                        <option value="ua" {% if selected_country == 'ua' %}selected{% endif %}>Ukraine</option>
+                        <option value="ve" {% if selected_country == 've' %}selected{% endif %}>Venezuela</option>
+                        <option value="za" {% if selected_country == 'za' %}selected{% endif %}>South Africa</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <!-- News cards -->
+        <div class="row g-4">
+            {% for article in articles %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if article.urlToImage %}
+                    <img src="{{ article.urlToImage }}" class="card-img-top" alt="Article image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text">{{ article.description | default('', true) | truncate(150) }}</p>
+                        <a href="{{ article.url }}" target="_blank" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="alert alert-warning">Sorry <br>No articles found<br>This service till only for United States</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Optional: Script to add flags dynamically next to country names -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.getElementById("country");
+        for (let option of select.options) {
+            const code = option.value.toLowerCase();
+            option.textContent = ` ${option.text}`;
+            const flag = document.createElement("img");
+            flag.src = `https://flagcdn.com/24x18/${code}.png`;
+            flag.style.marginRight = "5px";
+            flag.style.verticalAlign = "middle";
+            flag.loading = "lazy";
+            option.prepend(flag);
+        }
+    });
+</script>
+{% endblock %}

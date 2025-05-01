@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Plant Search (Wikipedia){% endblock %}
+{% block content %}
+<section class="api-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Plant Search</h2>
+            <form method="post" class="search-form">
+                <div class="input-group mx-auto" style="max-width: 500px;">
+                    <input type="text" name="search" class="form-control" 
+                           value="{{ search_term }}" placeholder="Search plants">
+                    <button type="submit" class="btn btn-success">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for plant in plants %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ plant.image_url }}" class="card-img-top" alt="{{ plant.title }}" style="object-fit: cover; height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plant.title }}</h5>
+                        <a href="{{ plant.page_url }}" class="btn btn-outline-primary" target="_blank">View on Wikipedia</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not plants %}
+        <div class="text-center text-muted mt-4">
+            <p>No results found. Try a different search.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

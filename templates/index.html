@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">API Explorer</h1>
+        <p class="lead mb-5">Explore 10 different APIs in one place</p>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            <!-- Country Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-globe fa-3x text-primary mb-3"></i>
+                        <h5>Countries</h5>
+                        <p class="text-muted">Get detailed country information</p>
+                        <a href="/countries" class="btn btn-primary">Explore Nations</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plants Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h5>Plants Database</h5>
+                        <p class="text-muted">Discover botanical information</p>
+                        <a href="/plants" class="btn btn-primary">Find Plants</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NASA Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-rocket fa-3x text-danger mb-3"></i>
+                        <h5>NASA APOD</h5>
+                        <p class="text-muted">Astronomy Picture of the Day</p>
+                        <a href="/nasa" class="btn btn-primary">View Space</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-newspaper fa-3x text-warning mb-3"></i>
+                        <h5>News Headlines</h5>
+                        <p class="text-muted">Latest global news updates</p>
+                        <a href="/news" class="btn btn-primary">Read News</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sun Times Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-sun fa-3x text-orange mb-3"></i>
+                        <h5>Sun Times</h5>
+                        <p class="text-muted">Sunrise/sunset calculator</p>
+                        <a href="/sun-times" class="btn btn-primary">Check Times</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pokémon Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-dragon fa-3x text-purple mb-3"></i>
+                        <h5>Pokémon</h5>
+                        <p class="text-muted">Pokémon character database</p>
+                        <a href="/pokemon/pikachu" class="btn btn-primary">Catch 'Em All</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movies Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-film fa-3x text-info mb-3"></i>
+                        <h5>Movie Database</h5>
+                        <p class="text-muted">Find movie information</p>
+                        <a href="/movies" class="btn btn-primary">Search Films</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cat Facts Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-cat fa-3x text-pink mb-3"></i>
+                        <h5>Cat Facts</h5>
+                        <p class="text-muted">Random feline facts</p>
+                        <a href="/cat-facts" class="btn btn-primary">Get Facts</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dog API Card -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-dog fa-3x text-brown mb-3"></i>
+                        <h5>Dog Pictures</h5>
+                        <p class="text-muted">Cute canine images</p>
+                        <a href="/dogs" class="btn btn-primary">View Dogs</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Music Card -->
+<div class="col">
+    <div class="card h-100">
+        <div class="card-body">
+            <i class="fas fa-music fa-3x text-dark mb-3"></i>
+            <h5>Music Explorer</h5>
+            <p class="text-muted">Top hits and artists</p>
+            <a href="/music" class="btn btn-primary">Play Now</a>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .text-orange { color: #ff6b35; }
+    .text-purple { color: #6f42c1; }
+    .text-pink { color: #d63384; }
+    .text-brown { color: #795548; }
+    .text-spotify-green { color: #1db954; }
+    .btn-primary {
+        background-color: var(--secondary-color);
+        margin-top: auto;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,104 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: var(--primary-color) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+}
+
+.api-section {
+    padding: 4rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.search-form {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+.pokemon-card img {
+    height: 200px;
+    object-fit: contain;
+}
+
+.dog-image, .cat-image {
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.weather-icon {
+    font-size: 4rem;
+}
+
+.fact-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Custom colors */
+.text-orange { color: #ff6b35; }
+.text-purple { color: #6f42c1; }
+.text-pink { color: #d63384; }
+.text-brown { color: #795548; }
+.text-spotify-green { color: #1db954; }
+
+/* Card content alignment */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Button positioning */
+.btn-primary {
+    margin-top: auto;
+}

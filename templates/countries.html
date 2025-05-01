@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Country Info{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Country Information</h2>
+            <form method="POST" class="search-form">
+                <div class="mb-3">
+                    <input type="text" name="country_input" class="form-control" 
+                           placeholder="Enter country name">
+                </div>
+                <div class="mb-3">
+                    <select name="country_select" class="form-select">
+                        <option value="">-- Or select a country --</option>
+                        <option value="Bharat">India</option>
+                        <option value="USA">United States</option>
+                        <option value="Canada">Canada</option>
+                        <option value="France">France</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="South Africa">South Africa</option>
+                        <option value="China">China</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+
+        {% if data %}
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ data.flags.png }}" class="card-img-top" alt="Flag">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ data.name.common }}</h3>
+                        <p class="card-text">{{ data.name.official }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Details</h4>
+                        <dl class="row">
+                            <dt class="col-sm-3">Capital</dt>
+                            <dd class="col-sm-9">{{ data.capital|join(', ') }}</dd>
+
+                            <dt class="col-sm-3">Population</dt>
+                            <dd class="col-sm-9">{{ data.population|number_format }}</dd>
+
+                            <dt class="col-sm-3">Currency</dt>
+                            <dd class="col-sm-9">
+                                {% for curr in data.currencies.values() %}
+                                {{ curr.name }} ({{ curr.symbol }})
+                                {% endfor %}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elif request.method == 'POST' %}
+        <div class="alert alert-warning text-center">Country not found</div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

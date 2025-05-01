@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Music{% endblock %}
+{% block content %}
+<div class="container text-center mt-5">
+    <h2 class="mb-4">Your Top Spotify Tracks</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for track in tracks %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ track.image }}" class="card-img-top" alt="{{ track.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ track.name }}</h5>
+                    <p class="card-text text-muted">{{ track.artist }}</p>
+                    {% if track.preview_url %}
+                        <audio controls class="w-100">
+                            <source src="{{ track.preview_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <p class="text-danger mt-2">No preview available</p>
+                    {% endif %}
+                    <iframe style="border-radius:12px" 
+  src="https://open.spotify.com/embed/track/{{ track.id }}" 
+  width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media">
+</iframe>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

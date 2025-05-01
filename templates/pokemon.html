@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ pokemon.name|title }}{% endblock %}
+{% block content %}
+<section class="api-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card pokemon-card">
+                    <img src="{{ pokemon.sprites.front_default }}" 
+                         class="card-img-top" 
+                         alt="{{ pokemon.name }}">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ pokemon.name|title }}</h3>
+                        <div class="badge bg-primary">#{{ pokemon.id }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-4">Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Types</h5>
+                                <ul class="list-unstyled">
+                                    {% for type in pokemon.types %}
+                                    <li class="badge bg-secondary">{{ type.type.name|title }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Abilities</h5>
+                                <ul>
+                                    {% for ability in pokemon.abilities %}
+                                    <li>{{ ability.ability.name|title }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
