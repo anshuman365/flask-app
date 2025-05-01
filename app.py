@@ -27,7 +27,8 @@ API_KEYS = {
     'TREFLE': 'RwFb1gqvjU_jmV_Pb_-9hCVhkBoDxejjJdXXQdJsVs0',
     'SPOTIFY': " ",
     'SPOTIFY_CLIENT_SECRET':' ',
-    'OMDB':'88777516'
+    'OMDB':'88777516',
+    'UNSPLASH':'9cPFpXdk4EA7HviMOpuuRQjgNykIJCwfJu_witcY_MY'
 }
 
 CLIENT_ID = "9855e1465f724d85a09689c50432d954"
@@ -37,6 +38,7 @@ REDIRECT_URI = "http://127.0.0.1:8000/music"
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SCOPE = "user-top-read playlist-modify-public"
+access_key = "9cPFpXdk4EA7HviMOpuuRQjgNykIJCwfJu_witcY_MY"
 
 def get_wiki_image(scientific_name):
     try:
@@ -58,6 +60,22 @@ def get_wiki_image(scientific_name):
     except Exception as e:
         print("[WIKI ERROR]", e)
     return None  # fallback if no image
+
+def get_plant_image(plant_name):
+    access_key = API_KEYS['UNSPLASH']
+    url = f"https://api.unsplash.com/search/photos?query={plant_name}&client_id={access_key}"
+    response = requests.get(url)
+    data = response.json()
+    if data["results"]:
+        photo = data["results"][0]
+        trigger_unsplash_download(photo['id'])  # log the download
+        return photo["urls"]["regular"]
+    return "/static/no_image.jpg"
+
+def trigger_unsplash_download(photo_id):
+    url = f"https://api.unsplash.com/photos/{photo_id}/download"
+    headers = {"Authorization": f"Client-ID {API_KEYS['UNSPLASH']}"}
+    requests.get(url, headers=headers)
 
 @app.route('/')
 def home():
@@ -112,21 +130,9 @@ def search_plants():
                     title = result['title']
                     page_url = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
 
-                    # Now fetch thumbnail
-                    details_url = "https://en.wikipedia.org/w/api.php"
-                    details_params = {
-                        'action': 'query',
-                        'format': 'json',
-                        'prop': 'pageimages',
-                        'titles': title,
-                        'pithumbsize': 300
-                    }
-
-                    img_response = requests.get(details_url, params=details_params)
-                    img_data = img_response.json()
-                    pages = img_data.get('query', {}).get('pages', {})
-                    page = next(iter(pages.values()))
-                    image_url = page.get('thumbnail', {}).get('source', '/static/no_image.jpg')
+                    # First try Wikipedia thumbnail
+                    wiki_image = get_wiki_image(title)
+                    image_url = wiki_image if wiki_image else get_plant_image(title)
 
                     plants.append({
                         'title': title,
